@@ -84,6 +84,9 @@ def update_user(id):
 @login_required
 def delete_user(id):
     user = User.query.get(id)
+    
+    if id == current_user.id:
+        return jsonify({'message': 'Não é possível deletar o usuário logado'}), 400
 
     if user:
         db.session.delete(user)
