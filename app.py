@@ -7,7 +7,7 @@ from flask import jsonify
 
 app = Flask(__name__)
 app.config['SECRETY_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin123:3306/'
 
 login_manager = LoginManager()
 
@@ -52,7 +52,7 @@ def create_user():
     password = data.get('password')
 
     if username and password:
-        user = User(username=username, password=password)
+        user = User(username=username, password=password, role='user')
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': 'Usuário criado com sucesso'}), 201
