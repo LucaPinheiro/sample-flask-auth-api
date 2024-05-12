@@ -15,9 +15,11 @@ db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -35,18 +37,20 @@ def login():
 
     return jsonify({'message': 'Credênciais inválidas'}), 400
 
+
 @app.route('/logout', methods=['GET'])
 @login_required
 def logout():
     logout_user()
     return jsonify({'message': 'Deslogado com sucesso'}), 200
 
+
 @app.route('/user', methods=['POST'])
 def create_user():
     data = request.json
-    username = data.get('username')  
-    password = data.get('password')  
-    
+    username = data.get('username')
+    password = data.get('password')
+
     if username and password:
         user = User(username=username, password=password)
         db.session.add(user)
@@ -54,6 +58,15 @@ def create_user():
         return jsonify({'message': 'Usuário criado com sucesso'}), 201
     return jsonify({'message': 'Dados inválidos'}), 400
 
+
+@app.route('/user/<int:id>', methods=['GET'])
+@login_required
+def get_user(id):
+    user = User.query.get(id)
+
+    if user:
+        return jsonify({'id': user.id, 'username': user.username}), 200
+    return jsonify({'message': 'Usuário não encontrado'}), 404
 
 
 @app.route('/hello-world', methods=['GET'])
