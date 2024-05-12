@@ -73,7 +73,10 @@ def get_user(id):
 def update_user(id):
     user = User.query.get(id)
     data = request.json
-
+    
+    if id != current_user.id and current_user.role == 'user':
+        return jsonify({'message': 'Acesso negado'}), 403
+    
     if user and data.get('password'):
         user.password = data.get('password')
         db.session.commit()
