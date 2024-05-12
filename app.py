@@ -88,6 +88,9 @@ def update_user(id):
 def delete_user(id):
     user = User.query.get(id)
     
+    if current_user.role == 'user':
+        return jsonify({'message': 'Acesso negado'}), 403
+    
     if id == current_user.id:
         return jsonify({'message': 'Não é possível deletar o usuário logado'}), 400
 
